@@ -27,7 +27,6 @@ jobs:
       - name: Install Android SDK packages
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - name: Build release APK
-        working-directory: android-setup
         run: gradle :app:assembleRelease --stacktrace
       - name: Sign CI APK
         shell: bash
@@ -51,7 +50,7 @@ jobs:
             key_alias="streamverse-setup-ci"; store_pass="streamverse"; key_pass="streamverse"
           fi
           build_tools="$(find "$ANDROID_HOME/build-tools" -maxdepth 1 -mindepth 1 -type d | sort -V | tail -1)"
-          "$build_tools/zipalign" -f -p 4 android-setup/app/build/outputs/apk/release/app-release-unsigned.apk StreamVerse-Setup-aligned.apk
+          "$build_tools/zipalign" -f -p 4 app/build/outputs/apk/release/app-release-unsigned.apk StreamVerse-Setup-aligned.apk
           "$build_tools/apksigner" sign --ks release.jks --ks-key-alias "$key_alias" \
             --ks-pass "pass:$store_pass" --key-pass "pass:$key_pass" \
             --out StreamVerse-Setup-0.1.0.apk StreamVerse-Setup-aligned.apk
