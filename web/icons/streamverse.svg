@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="StreamVerse">
+  <defs><linearGradient id="g" x1="70" y1="70" x2="440" y2="450" gradientUnits="userSpaceOnUse"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+  <rect width="512" height="512" rx="124" fill="#101e31"/>
+  <path d="M157 112c-22-13-49 3-49 29v230c0 26 27 42 49 29l198-115c22-13 22-45 0-58L157 112Z" fill="url(#g)"/>
+  <path d="M168 175 310 256 168 337V175Z" fill="#f7fbff" fill-opacity=".94"/>
+</svg>

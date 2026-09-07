@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Set up curated Stremio add-ons and keep Live TV URLs together on your device.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>StreamVerse Setup</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/streamverse.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/streamverse-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#addons" aria-label="StreamVerse Setup home">
+      <img src="icons/streamverse.svg" alt="" width="48" height="48">
+      <span><strong>StreamVerse Setup</strong><small>Web companion</small></span>
+    </a>
+    <nav class="tabs" aria-label="Main navigation">
+      <a href="#addons" data-route="addons">Add-ons</a>
+      <a href="#live-tv" data-route="live-tv">Live TV</a>
+      <a href="#community" data-route="community">Community</a>
+    </nav>
+    <button class="install-app secondary" type="button" hidden>Install app</button>
+  </header>
+
+  <main>
+    <section class="view" id="addons" data-view="addons">
+      <div class="intro">
+        <div><h1>Choose your add-ons</h1><p>Start with the curated list, or paste any secure Stremio manifest below.</p></div>
+        <div class="count"><strong>15</strong><span>curated choices</span></div>
+      </div>
+
+      <form class="manifest-bar" id="manifest-form">
+        <label for="custom-manifest">Add a manifest URL</label>
+        <div class="input-actions">
+          <input id="custom-manifest" type="url" inputmode="url" autocomplete="url" placeholder="https://provider.example/manifest.json">
+          <button class="primary" type="submit">Open in Stremio</button>
+          <button class="secondary qr-trigger" type="button" data-input="custom-manifest">QR</button>
+        </div>
+        <p class="field-message" id="manifest-message" aria-live="polite"></p>
+      </form>
+
+      <div class="toolbar">
+        <label class="search"><span class="sr-only">Search add-ons</span><input id="addon-search" type="search" placeholder="Search the 15 add-ons"></label>
+        <div class="filters" role="group" aria-label="Filter add-ons">
+          <button class="filter active" type="button" data-filter="all">All</button>
+          <button class="filter" type="button" data-filter="direct">Direct</button>
+          <button class="filter" type="button" data-filter="setup">Setup</button>
+        </div>
+      </div>
+      <div class="addon-list" id="addon-list"></div>
+      <p class="empty" id="addon-empty" hidden>No add-ons match that search.</p>
+    </section>
+
+    <section class="view" id="live-tv" data-view="live-tv" hidden>
+      <div class="intro"><div><h1>Live TV setup</h1><p>Keep your authorized Live TV links together on this device.</p></div></div>
+      <div class="workspace">
+        <form class="live-form" id="live-form">
+          <label for="live-manifest">Stremio Live TV manifest</label>
+          <input id="live-manifest" type="url" inputmode="url" placeholder="https://provider.example/manifest.json">
+          <label for="m3u">M3U playlist URL</label>
+          <input id="m3u" type="url" inputmode="url" placeholder="https://provider.example/playlist.m3u">
+          <label for="xmltv">XMLTV guide URL</label>
+          <input id="xmltv" type="url" inputmode="url" placeholder="https://provider.example/guide.xml">
+          <div class="form-actions">
+            <button class="primary" type="submit">Save on this device</button>
+            <button class="secondary" type="button" id="install-live">Open manifest</button>
+            <button class="secondary" type="button" id="qr-live">Show QR</button>
+          </div>
+          <p class="field-message" id="live-message" aria-live="polite"></p>
+        </form>
+        <aside class="privacy-note">
+          <h2>Your links stay private</h2>
+          <p>This page stores your M3U and XMLTV links only in this browser. They are not added to the public website or sent to StreamVerse.</p>
+          <a class="text-link" href="https://stremio-addons.net/addons?categories=live+tv&sort=popular" target="_blank" rel="noopener noreferrer">Browse Live TV add-ons</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="community" data-view="community" hidden>
+      <div class="intro"><div><h1>Community directories</h1><p>Go directly to the current Stremio and Nuvio resources.</p></div></div>
+      <div class="directory-list">
+        <article><div class="directory-icon">S</div><div><h2>Stremio Community Add-ons</h2><p>Browse add-ons, categories, current status, and setup pages.</p></div><a class="primary" href="https://stremio-addons.net/addons" target="_blank" rel="noopener noreferrer">Open directory</a></article>
+        <article><div class="directory-icon nuvio">N</div><div><h2>Nuvio</h2><p>Open Nuvio’s website and compatible add-on resources.</p></div><a class="primary" href="https://nuvio.tv/" target="_blank" rel="noopener noreferrer">Open Nuvio</a></article>
+        <article><div class="directory-icon adult">18+</div><div><h2>Adult directory</h2><p>Optional and separate from the default curated list.</p></div><a class="secondary" href="https://stremio-addons.net/addons?categories=18%2B&sort=popular" target="_blank" rel="noopener noreferrer">Open category</a></article>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="qr-dialog" aria-labelledby="qr-title">
+    <button class="dialog-close" type="button" aria-label="Close">×</button>
+    <h2 id="qr-title">Scan on your TV or phone</h2>
+    <p id="qr-label"></p>
+    <canvas id="qr-canvas" width="280" height="280"></canvas>
+    <button class="secondary" id="copy-qr-url" type="button">Copy link</button>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
