@@ -1,0 +1,87 @@
+name: Build StreamVerse Setup APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Build release APK
+        working-directory: android-setup
+        run: gradle :app:assembleRelease --stacktrace
+      - name: Sign CI APK
+        shell: bash
+        env:
+          SETUP_KEYSTORE_BASE64: ${{ secrets.SETUP_KEYSTORE_BASE64 }}
+          SETUP_KEYSTORE_PASSWORD: ${{ secrets.SETUP_KEYSTORE_PASSWORD }}
+          SETUP_KEY_ALIAS: ${{ secrets.SETUP_KEY_ALIAS }}
+          SETUP_KEY_PASSWORD: ${{ secrets.SETUP_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            for secret in SETUP_KEYSTORE_BASE64 SETUP_KEYSTORE_PASSWORD SETUP_KEY_ALIAS SETUP_KEY_PASSWORD; do
+              [[ -n "${!secret:-}" ]] || { echo "::error::Stable signing secret is missing: $secret"; exit 1; }
+            done
+            printf '%s' "$SETUP_KEYSTORE_BASE64" | base64 --decode > release.jks
+            key_alias="$SETUP_KEY_ALIAS"; store_pass="$SETUP_KEYSTORE_PASSWORD"; key_pass="$SETUP_KEY_PASSWORD"
+          else
+            keytool -genkeypair -v -keystore release.jks -storepass streamverse -keypass streamverse \
+              -alias streamverse-setup-ci -keyalg RSA -keysize 4096 -validity 3650 \
+              -dname "CN=StreamVerse Setup CI, O=StreamVerse, C=US"
+            key_alias="streamverse-setup-ci"; store_pass="streamverse"; key_pass="streamverse"
+          fi
+          build_tools="$(find "$ANDROID_HOME/build-tools" -maxdepth 1 -mindepth 1 -type d | sort -V | tail -1)"
+          "$build_tools/zipalign" -f -p 4 android-setup/app/build/outputs/apk/release/app-release-unsigned.apk StreamVerse-Setup-aligned.apk
+          "$build_tools/apksigner" sign --ks release.jks --ks-key-alias "$key_alias" \
+            --ks-pass "pass:$store_pass" --key-pass "pass:$key_pass" \
+            --out StreamVerse-Setup-0.1.0.apk StreamVerse-Setup-aligned.apk
+          rm -f StreamVerse-Setup-aligned.apk release.jks
+      - name: Validate exact APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_tools="$(find "$ANDROID_HOME/build-tools" -maxdepth 1 -mindepth 1 -type d | sort -V | tail -1)"
+          "$build_tools/apksigner" verify --verbose --print-certs StreamVerse-Setup-0.1.0.apk
+          "$build_tools/aapt" dump badging StreamVerse-Setup-0.1.0.apk | tee apk-badging.txt
+          grep -q "package: name='com.akahwaj.streamversesetup'" apk-badging.txt
+          grep -q "leanback-launchable-activity" apk-badging.txt
+          grep -q "application-label:'StreamVerse Setup'" apk-badging.txt
+          sha256sum StreamVerse-Setup-0.1.0.apk | tee StreamVerse-Setup-0.1.0.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StreamVerse-Setup-Fire-TV
+          path: |
+            StreamVerse-Setup-0.1.0.apk
+            StreamVerse-Setup-0.1.0.sha256
+            apk-badging.txt
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish stable release for automatic updates
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            StreamVerse-Setup-0.1.0.apk StreamVerse-Setup-0.1.0.sha256 \
+            --repo "$GITHUB_REPOSITORY" --title "StreamVerse Setup $GITHUB_REF_NAME" \
+            --generate-notes --verify-tag

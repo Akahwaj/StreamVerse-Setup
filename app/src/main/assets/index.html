@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>StreamVerse Setup</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#101e31;--line:#243954;--cyan:#22d3ee;--purple:#8b5cf6;--text:#f7fbff;--muted:#a8b5c6;--ok:#34d399}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#1f2e60 0,transparent 36%),var(--bg);color:var(--text);font:18px/1.45 system-ui,sans-serif;min-height:100vh}
+    header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:18px;padding:22px 4vw;background:#07111feF;border-bottom:1px solid var(--line)}
+    .logo{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,var(--purple),var(--cyan));display:grid;place-items:center;font-size:25px}.title{font-size:28px;font-weight:800}.sub{color:var(--muted);font-size:14px}
+    nav{margin-left:auto;display:flex;gap:10px}.nav,.button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:13px 18px;font-weight:750;cursor:pointer}.nav.active,.button.primary{background:linear-gradient(135deg,var(--purple),#2563eb);border-color:transparent}
+    button:focus,a:focus,input:focus{outline:4px solid var(--cyan);outline-offset:3px}.page{display:none;padding:30px 4vw 60px}.page.active{display:block}.hero{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:24px}.hero h1{font-size:38px;margin:0 0 7px}.hero p{margin:0;color:var(--muted);max-width:780px}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:#0c2b2c;color:#a7f3d0;border:1px solid #145e59;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}
+    .card{background:linear-gradient(155deg,#13243a,#0d1929);border:1px solid var(--line);border-radius:16px;padding:18px;min-height:190px;display:flex;flex-direction:column}.card .num{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:.08em}.card h2{font-size:21px;margin:8px 0}.card p{color:var(--muted);font-size:15px;margin:0 0 18px}.card .button{margin-top:auto;width:100%}
+    .direct{color:var(--ok);font-size:12px;font-weight:800}.setup{color:#fbbf24;font-size:12px;font-weight:800}.panel{max-width:900px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}.panel h2{margin-top:0}.field{margin:16px 0}.field label{display:block;font-weight:750;margin-bottom:7px}.field small{color:var(--muted)}input{width:100%;margin-top:7px;background:#07111f;border:1px solid #365171;color:#fff;border-radius:11px;padding:15px;font-size:17px}.row{display:flex;gap:12px;flex-wrap:wrap}.note{border-left:4px solid #f59e0b;background:#2b2112;padding:14px 16px;border-radius:8px;color:#fde68a;margin:18px 0}.foot{color:var(--muted);font-size:13px;margin-top:24px}
+    @media(max-width:860px){header{align-items:flex-start;flex-wrap:wrap}.title{font-size:22px}nav{width:100%;margin:0;overflow:auto}.nav{white-space:nowrap}.hero{align-items:flex-start;flex-direction:column}.hero h1{font-size:30px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">▶</div><div><div class="title">StreamVerse Setup</div><div class="sub">Separate companion · original APK stays unchanged</div></div>
+  <nav><button class="nav active" data-page="addons">Free 15</button><button class="nav" data-page="live">Live TV URLs</button><button class="nav" data-page="community">Community</button><button class="nav" onclick="checkUpdates(event)">Check updates</button></nav>
+</header>
+
+<main id="addons" class="page active">
+  <section class="hero"><div><h1>Curated free add-ons</h1><p>No account login. Direct entries hand off to StreamVerse using its normal install confirmation; setup entries open the provider’s current configuration page.</p></div><span class="badge">✓ No credentials bundled</span></section>
+  <div id="addonGrid" class="grid"></div>
+  <div class="note">Community add-ons are independent third-party services and may change. Nothing here silently overwrites your StreamVerse setup.</div>
+</main>
+
+<main id="live" class="page">
+  <section class="hero"><div><h1>Live TV URLs</h1><p>Add a Stremio-compatible Live TV manifest, and keep your permitted M3U/XMLTV URLs together on this device.</p></div></section>
+  <section class="panel">
+    <h2>Live TV add-on</h2>
+    <div class="field"><label>Manifest URL <small>— must use HTTPS and end with manifest.json</small></label><input id="manifest" inputmode="url" placeholder="https://provider.example/manifest.json"></div>
+    <div class="field"><label>M3U playlist URL <small>— stored locally; not uploaded</small></label><input id="m3u" inputmode="url" placeholder="https://provider.example/playlist.m3u"></div>
+    <div class="field"><label>XMLTV guide URL <small>— stored locally; not uploaded</small></label><input id="xmltv" inputmode="url" placeholder="https://provider.example/guide.xml"></div>
+    <div class="row"><button class="button primary" onclick="installLive()">Install manifest</button><button class="button" onclick="saveLive()">Save URLs</button><button class="button" onclick="openLiveDirectory()">Browse Live TV add-ons</button></div>
+    <p class="foot">Use only playlists and channels you are authorized to access. Raw M3U/XMLTV URLs require a compatible Live TV add-on; they are not themselves Stremio manifests.</p>
+  </section>
+</main>
+
+<main id="community" class="page">
+  <section class="hero"><div><h1>Community directories</h1><p>Open the current Stremio or Nuvio community pages directly from the companion.</p></div></section>
+  <div class="grid">
+    <article class="card"><span class="direct">DIRECTORY</span><h2>Stremio Community Add-ons</h2><p>Browse the current catalog, categories, manifest status, and configuration pages.</p><button class="button primary" onclick="openWeb('https://stremio-addons.net/addons')">Open Stremio directory</button></article>
+    <article class="card"><span class="direct">NUVIO</span><h2>Nuvio Add-ons</h2><p>Open Nuvio’s official site and add-on resources. Compatible manifests can be pasted in Live TV URLs.</p><button class="button primary" onclick="openWeb('https://nuvio.tv/')">Open Nuvio</button></article>
+    <article class="card"><span class="setup">OPTIONAL</span><h2>18+ directory</h2><p>Kept outside the default 15 and never installed automatically.</p><button class="button" onclick="openWeb('https://stremio-addons.net/addons?categories=18%2B&sort=popular')">Open adult category</button></article>
+  </div>
+</main>
+
+<script>
+const addons=[
+ {n:'Cinemeta',d:'Official movie and series metadata and catalogs.',kind:'direct',url:'https://v3-cinemeta.strem.io/manifest.json'},
+ {n:'OpenSubtitles v3',d:'Official multilingual subtitle add-on.',kind:'direct',url:'https://opensubtitles-v3.strem.io/manifest.json'},
+ {n:'WatchHub',d:'Shows legal streaming availability by country.',kind:'direct',url:'https://watchhub.strem.io/manifest.json'},
+ {n:'YouTube Channels',d:'YouTube channel catalogs inside compatible clients.',kind:'direct',url:'https://v3-channels.strem.io/manifest.json'},
+ {n:'Anime Kitsu',d:'Free anime metadata, search, catalogs, and subtitles.',kind:'direct',url:'https://anime-kitsu.strem.fun/manifest.json'},
+ {n:'TMDB Addon',d:'TMDB discovery, artwork, and metadata setup.',kind:'setup',url:'https://stremio-addons.net/addons?search=The%20Movie%20Database'},
+ {n:'Streaming Catalogs',d:'Catalog rows for popular streaming services.',kind:'setup',url:'https://stremio-addons.net/addons/streaming-catalogs'},
+ {n:'USA TV',d:'Community Live TV add-on listing and current status.',kind:'setup',url:'https://stremio-addons.net/addons/usa-tv'},
+ {n:'TOP Streaming',d:'Popular community streaming configuration page.',kind:'setup',url:'https://stremio-addons.net/addons/top-streaming'},
+ {n:'AIOStreams',d:'One configurable entry point for supported stream sources.',kind:'setup',url:'https://stremio-addons.net/addons/aiostreams'},
+ {n:'Comet',d:'Community stream provider with optional configuration.',kind:'setup',url:'https://stremio-addons.net/addons/comet'},
+ {n:'MediaFusion',d:'Community catalogs and stream provider configuration.',kind:'setup',url:'https://stremio-addons.net/addons/mediafusion-elfhosted'},
+ {n:'Torrentio',d:'Community torrent source; configure only sources you may use.',kind:'setup',url:'https://stremio-addons.net/addons/torrentio'},
+ {n:'Anime Add-ons',d:'Current popular anime add-ons and manifest health.',kind:'setup',url:'https://stremio-addons.net/addons?categories=anime&sort=popular'},
+ {n:'Community Catalog',d:'Install the directory add-on or browse every category.',kind:'setup',url:'https://stremio-addons.net/addons/stremio-addons.net'}
+];
+const grid=document.getElementById('addonGrid');
+addons.forEach((a,i)=>{const el=document.createElement('article');el.className='card';el.innerHTML=`<span class="${a.kind==='direct'?'direct':'setup'}">${a.kind==='direct'?'DIRECT INSTALL':'OPEN SETUP'}</span><span class="num">${String(i+1).padStart(2,'0')} / 15</span><h2>${a.n}</h2><p>${a.d}</p><button class="button ${a.kind==='direct'?'primary':''}">${a.kind==='direct'?'Install in StreamVerse':'Open setup page'}</button>`;el.querySelector('button').onclick=()=>a.kind==='direct'?install(a.url):openWeb(a.url);grid.appendChild(el)});
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav,.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');window.scrollTo(0,0)});
+function hasBridge(){return typeof StreamVerseSetup!=='undefined'}
+function install(url){if(hasBridge())StreamVerseSetup.installManifest(url);else location.href=url.replace('https://','stremio://')}
+function openWeb(url){if(hasBridge())StreamVerseSetup.openExternal(url);else window.open(url,'_blank')}
+function saveLive(){if(hasBridge())StreamVerseSetup.saveLiveTv(manifest.value,m3u.value,xmltv.value);else localStorage.setItem('live',JSON.stringify([manifest.value,m3u.value,xmltv.value]))}
+function installLive(){saveLive();install(manifest.value)}
+function openLiveDirectory(){openWeb('https://stremio-addons.net/addons?categories=live+tv&sort=popular')}
+function checkUpdates(event){event.stopPropagation();if(hasBridge())StreamVerseSetup.checkForUpdates()}
+try{const saved=hasBridge()?StreamVerseSetup.loadLiveTv().split('\n'):JSON.parse(localStorage.getItem('live')||'["","",""]');[manifest.value,m3u.value,xmltv.value]=saved}catch(e){}
+</script>
+</body>
+</html>
