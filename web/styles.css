@@ -40,6 +40,12 @@ h1 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.05; letter-spacing: -.0
 .count { display: flex; align-items: baseline; gap: 9px; color: var(--muted); white-space: nowrap; }
 .count strong { color: var(--cyan); font-size: 2.5rem; }
 
+.featured-addon { display: grid; grid-template-columns: 66px minmax(0,1fr) auto; gap: 18px; align-items: center; margin-bottom: 18px; padding: 20px; border: 1px solid #5062ad; border-radius: 20px; background: linear-gradient(120deg, rgba(96,70,180,.32), rgba(20,38,61,.94) 54%, rgba(20,95,110,.28)); box-shadow: var(--shadow); }
+.featured-mark { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 17px; background: linear-gradient(135deg,var(--purple),var(--cyan)); color: #fff; font-size: .9rem; font-weight: 950; letter-spacing: .03em; }
+.featured-label { color: #c4b5fd; font-size: .75rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.featured-addon h2 { margin: 2px 0 4px; font-size: 1.25rem; }
+.featured-addon p { margin: 0; color: var(--muted); line-height: 1.5; }
+
 .manifest-bar, .live-form { background: linear-gradient(150deg, rgba(20,38,61,.96), rgba(12,25,43,.96)); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
 .manifest-bar { margin-bottom: 22px; }
 label { display: block; font-weight: 760; margin-bottom: 9px; }
@@ -113,6 +119,8 @@ dialog p { color: var(--muted); overflow-wrap: anywhere; }
   .search { max-width: none; }
   .workspace { grid-template-columns: 1fr; }
   .addon-row { grid-template-columns: 46px minmax(0,1fr); }
+  .featured-addon { grid-template-columns: 58px minmax(0,1fr); }
+  .featured-addon .row-actions { grid-column: 1 / -1; padding-left: 76px; }
   .row-actions { grid-column: 1 / -1; padding-left: 64px; }
   .directory-list article { grid-template-columns: 52px minmax(0,1fr); }
   .directory-list article > a { grid-column: 1 / -1; }
@@ -127,6 +135,7 @@ dialog p { color: var(--muted); overflow-wrap: anywhere; }
   .count { display: none; }
   .filters button { flex: 1; padding-inline: 12px; }
   .row-actions { padding-left: 0; display: grid; grid-template-columns: 1fr auto; }
+  .featured-addon .row-actions { padding-left: 0; }
   .addon-row { padding: 16px; gap: 12px; }
   .form-actions > * { width: 100%; }
 }

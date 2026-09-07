@@ -2,6 +2,8 @@
 
 A lightweight, installable web companion for StreamVerse. It provides a curated 15-item Stremio add-on list, custom manifest handoff, private device-local Live TV URL storage, QR sharing, and direct links to Stremio and Nuvio community resources.
 
+The featured AIOMetadata entry uses a dedicated dummy configuration approved for inclusion in the public source. It is separate from users' private configurations.
+
 ## Privacy
 
 - No account or sign-in is required.
