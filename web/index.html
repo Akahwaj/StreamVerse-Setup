@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#07111f">
-  <meta name="description" content="Set up curated Stremio add-ons and keep Live TV URLs together on your device.">
+  <meta name="description" content="Set up curated Stremio add-ons, debrid providers, and Live TV URLs from your phone.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>StreamVerse Setup</title>
@@ -17,10 +17,11 @@
   <header class="topbar">
     <a class="brand" href="#addons" aria-label="StreamVerse Setup home">
       <img src="icons/streamverse.svg" alt="" width="48" height="48">
-      <span><strong>StreamVerse Setup</strong><small>Web companion</small></span>
+      <span><strong>StreamVerse Setup</strong><small>Mobile companion</small></span>
     </a>
     <nav class="tabs" aria-label="Main navigation">
       <a href="#addons" data-route="addons">Add-ons</a>
+      <a href="#providers" data-route="providers">Providers</a>
       <a href="#live-tv" data-route="live-tv">Live TV</a>
       <a href="#community" data-route="community">Community</a>
     </nav>
@@ -36,7 +37,7 @@
 
       <section class="featured-addon" aria-labelledby="featured-title">
         <div class="featured-mark">AIO</div>
-        <div><span class="featured-label">Preloaded demo</span><h2 id="featured-title">StreamVerse AIOMetadata</h2><p>Movies, series, anime metadata, artwork, ratings, and discovery catalogs from the dummy configuration.</p></div>
+        <div><span class="featured-label">StreamVerse default</span><h2 id="featured-title">StreamVerse AIOMetadata</h2><p>Movies, series, anime metadata, artwork, ratings, and discovery catalogs from the StreamVerse default metadata configuration.</p></div>
         <div class="row-actions"><button class="primary" id="open-demo-manifest" type="button">Open in Stremio</button><button class="secondary" id="qr-demo-manifest" type="button">QR</button></div>
       </section>
 
@@ -60,6 +61,19 @@
       </div>
       <div class="addon-list" id="addon-list"></div>
       <p class="empty" id="addon-empty" hidden>No add-ons match that search.</p>
+    </section>
+
+    <section class="view" id="providers" data-view="providers" hidden>
+      <div class="intro"><div><h1>Debrid provider setup</h1><p>Use your phone to sign in or authorize your provider, then finish the connection inside StreamVerse on the TV. No provider token is stored by this public setup page.</p></div></div>
+      <div class="directory-list">
+        <article><div class="directory-icon">RD</div><div><h2>Real-Debrid</h2><p>Open Real-Debrid on your phone. Use the device page when StreamVerse shows you an authorization code.</p></div><div class="row-actions"><a class="primary" href="https://real-debrid.com/device" target="_blank" rel="noopener noreferrer">Open device page</a><button class="secondary provider-qr" type="button" data-url="https://real-debrid.com/device" data-label="Real-Debrid device setup">QR</button></div></article>
+        <article><div class="directory-icon">PM</div><div><h2>Premiumize</h2><p>Open your Premiumize account on mobile to manage access and complete provider setup for StreamVerse.</p></div><div class="row-actions"><a class="primary" href="https://www.premiumize.me/account" target="_blank" rel="noopener noreferrer">Open account</a><button class="secondary provider-qr" type="button" data-url="https://www.premiumize.me/account" data-label="Premiumize account setup">QR</button></div></article>
+        <article><div class="directory-icon">TB</div><div><h2>TorBox</h2><p>Open TorBox on your phone to sign in and complete the authorization flow shown by StreamVerse.</p></div><div class="row-actions"><a class="primary" href="https://torbox.app/" target="_blank" rel="noopener noreferrer">Open TorBox</a><button class="secondary provider-qr" type="button" data-url="https://torbox.app/" data-label="TorBox setup">QR</button></div></article>
+      </div>
+      <aside class="privacy-note">
+        <h2>Private by design</h2>
+        <p>Provider credentials and API tokens should stay between you, the provider, and StreamVerse. This companion never puts a raw debrid token into a public QR code or repository.</p>
+      </aside>
     </section>
 
     <section class="view" id="live-tv" data-view="live-tv" hidden>
