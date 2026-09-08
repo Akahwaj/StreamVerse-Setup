@@ -17,7 +17,6 @@ const addons = [
 ];
 
 const demoManifest = 'https://aiometadata.elfhosted.com/stremio/7e1b6e37-b28d-4ecb-ab15-206d7f44d69f/manifest.json';
-
 const state = { filter: 'all', query: '', qrUrl: '', deferredPrompt: null };
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -53,7 +52,7 @@ async function copyText(value) {
   catch { notify('Press and hold the link to copy it'); }
 }
 
-function showQr(url, label = 'Add-on link') {
+function showQr(url, label = 'Setup link') {
   if (!validHttps(url)) { notify('Enter a secure HTTPS link first'); return; }
   state.qrUrl = url;
   $('#qr-label').textContent = label;
@@ -65,7 +64,10 @@ function showQr(url, label = 'Add-on link') {
       if (error) notify('QR could not be created');
     });
   } else {
-    const ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 280, 280); ctx.fillStyle = '#07111f'; ctx.font = '700 16px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('QR is loading. Try again.', 140, 142);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 280, 280);
+    ctx.fillStyle = '#07111f'; ctx.font = '700 16px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('QR is loading. Try again.', 140, 142);
   }
 }
 
@@ -95,7 +97,7 @@ function renderAddons() {
 
 function showRoute() {
   const route = location.hash.slice(1) || 'addons';
-  const safeRoute = ['addons', 'live-tv', 'community'].includes(route) ? route : 'addons';
+  const safeRoute = ['addons', 'providers', 'live-tv', 'community'].includes(route) ? route : 'addons';
   $$('[data-view]').forEach(view => { view.hidden = view.dataset.view !== safeRoute; });
   $$('[data-route]').forEach(link => link.classList.toggle('active', link.dataset.route === safeRoute));
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -103,13 +105,14 @@ function showRoute() {
 
 $('#manifest-form').addEventListener('submit', event => { event.preventDefault(); openManifest($('#custom-manifest').value.trim(), $('#manifest-message')); });
 $('#open-demo-manifest').addEventListener('click', () => openManifest(demoManifest));
-$('#qr-demo-manifest').addEventListener('click', () => showQr(demoManifest, 'StreamVerse AIOMetadata demo'));
+$('#qr-demo-manifest').addEventListener('click', () => showQr(demoManifest, 'StreamVerse AIOMetadata'));
 $('#addon-search').addEventListener('input', event => { state.query = event.target.value.trim().toLowerCase(); renderAddons(); });
 $$('.filter').forEach(button => button.addEventListener('click', () => {
   state.filter = button.dataset.filter;
   $$('.filter').forEach(item => item.classList.toggle('active', item === button));
   renderAddons();
 }));
+$$('.provider-qr').forEach(button => button.addEventListener('click', () => showQr(button.dataset.url, button.dataset.label)));
 
 const liveFields = ['live-manifest', 'm3u', 'xmltv'];
 function loadLive() {
