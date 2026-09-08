@@ -2,51 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
   <title>StreamVerse Setup</title>
   <style>
-    :root{color-scheme:dark;--bg:#07111f;--panel:#101e31;--line:#243954;--cyan:#22d3ee;--purple:#8b5cf6;--text:#f7fbff;--muted:#a8b5c6;--ok:#34d399}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#1f2e60 0,transparent 36%),var(--bg);color:var(--text);font:18px/1.45 system-ui,sans-serif;min-height:100vh}
-    header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:18px;padding:22px 4vw;background:#07111feF;border-bottom:1px solid var(--line)}
-    .logo{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,var(--purple),var(--cyan));display:grid;place-items:center;font-size:25px}.title{font-size:28px;font-weight:800}.sub{color:var(--muted);font-size:14px}
-    nav{margin-left:auto;display:flex;gap:10px}.nav,.button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;padding:13px 18px;font-weight:750;cursor:pointer}.nav.active,.button.primary{background:linear-gradient(135deg,var(--purple),#2563eb);border-color:transparent}
-    button:focus,a:focus,input:focus{outline:4px solid var(--cyan);outline-offset:3px}.page{display:none;padding:30px 4vw 60px}.page.active{display:block}.hero{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:24px}.hero h1{font-size:38px;margin:0 0 7px}.hero p{margin:0;color:var(--muted);max-width:780px}
-    .badge{display:inline-flex;align-items:center;gap:8px;background:#0c2b2c;color:#a7f3d0;border:1px solid #145e59;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}
-    .card{background:linear-gradient(155deg,#13243a,#0d1929);border:1px solid var(--line);border-radius:16px;padding:18px;min-height:190px;display:flex;flex-direction:column}.card .num{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:.08em}.card h2{font-size:21px;margin:8px 0}.card p{color:var(--muted);font-size:15px;margin:0 0 18px}.card .button{margin-top:auto;width:100%}
-    .direct{color:var(--ok);font-size:12px;font-weight:800}.setup{color:#fbbf24;font-size:12px;font-weight:800}.panel{max-width:900px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}.panel h2{margin-top:0}.field{margin:16px 0}.field label{display:block;font-weight:750;margin-bottom:7px}.field small{color:var(--muted)}input{width:100%;margin-top:7px;background:#07111f;border:1px solid #365171;color:#fff;border-radius:11px;padding:15px;font-size:17px}.row{display:flex;gap:12px;flex-wrap:wrap}.note{border-left:4px solid #f59e0b;background:#2b2112;padding:14px 16px;border-radius:8px;color:#fde68a;margin:18px 0}.foot{color:var(--muted);font-size:13px;margin-top:24px}
-    @media(max-width:860px){header{align-items:flex-start;flex-wrap:wrap}.title{font-size:22px}nav{width:100%;margin:0;overflow:auto}.nav{white-space:nowrap}.hero{align-items:flex-start;flex-direction:column}.hero h1{font-size:30px}}
+    :root{color-scheme:dark;--bg:#050914;--panel:#101b2f;--panel2:#162742;--line:rgba(148,163,184,.18);--cyan:#38bdf8;--violet:#8b5cf6;--blue:#2563eb;--text:#f8fbff;--muted:#9eabc0;--ok:#34d399;--warn:#fbbf24;--shadow:0 24px 70px rgba(0,0,0,.34)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font:17px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 82% 0%,rgba(59,130,246,.24),transparent 30rem),radial-gradient(circle at 10% 16%,rgba(139,92,246,.16),transparent 28rem),linear-gradient(180deg,#07101f 0%,var(--bg) 50%,#04070f 100%)}
+    header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:18px;padding:18px 4vw;background:rgba(5,9,20,.82);border-bottom:1px solid var(--line);backdrop-filter:blur(20px)}
+    .logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--violet),var(--cyan));display:grid;place-items:center;font-size:24px;box-shadow:0 12px 30px rgba(56,189,248,.18)}.title{font-size:26px;font-weight:900;letter-spacing:-.03em}.sub{color:var(--muted);font-size:13px}
+    nav{margin-left:auto;display:flex;gap:7px;padding:5px;border:1px solid var(--line);border-radius:16px;background:rgba(12,22,38,.7)}.nav,.button{border:1px solid transparent;background:transparent;color:var(--muted);border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.nav.active,.button.primary{color:#fff;background:linear-gradient(135deg,var(--violet),var(--blue));box-shadow:0 10px 24px rgba(79,70,229,.22)}.button.secondary{background:var(--panel);border-color:var(--line);color:var(--text)}
+    button:focus,a:focus,input:focus{outline:3px solid var(--cyan);outline-offset:3px}.page{display:none;padding:36px 4vw 72px;max-width:1400px;margin:auto}.page.active{display:block}.hero{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.hero h1{font-size:clamp(34px,5vw,62px);line-height:1;letter-spacing:-.055em;margin:0 0 10px}.hero p{margin:0;color:var(--muted);max-width:760px;line-height:1.65}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(12,43,44,.75);color:#a7f3d0;border:1px solid rgba(52,211,153,.25);padding:9px 13px;border-radius:999px;font-size:13px;font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+    .card{background:linear-gradient(155deg,rgba(19,36,58,.94),rgba(8,17,31,.94));border:1px solid var(--line);border-radius:20px;padding:20px;min-height:210px;display:flex;flex-direction:column;box-shadow:0 12px 34px rgba(0,0,0,.2)}.card .num{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.1em}.card h2{font-size:21px;margin:8px 0}.card p{color:var(--muted);font-size:15px;margin:0 0 18px}.card .button{margin-top:auto;width:100%}.direct{color:var(--ok);font-size:11px;font-weight:900;letter-spacing:.08em}.setup{color:var(--warn);font-size:11px;font-weight:900;letter-spacing:.08em}
+    .provider-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.provider{background:linear-gradient(155deg,rgba(19,36,58,.96),rgba(8,17,31,.96));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}.provider-icon{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;font-weight:950;background:linear-gradient(135deg,var(--violet),var(--blue));margin-bottom:18px}.provider h2{margin:0 0 8px}.provider p{color:var(--muted);min-height:72px}.provider .button{width:100%;margin-top:8px}
+    .panel{max-width:920px;background:linear-gradient(150deg,rgba(17,31,52,.94),rgba(8,17,31,.94));border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}.panel h2{margin-top:0}.field{margin:16px 0}.field label{display:block;font-weight:800;margin-bottom:7px}.field small{color:var(--muted)}input{width:100%;margin-top:7px;background:rgba(4,10,20,.75);border:1px solid rgba(96,125,163,.42);color:#fff;border-radius:13px;padding:15px;font-size:17px}.row{display:flex;gap:10px;flex-wrap:wrap}.note{border-left:4px solid var(--warn);background:rgba(43,33,18,.8);padding:14px 16px;border-radius:9px;color:#fde68a;margin:20px 0}.privacy{border:1px solid rgba(52,211,153,.22);background:rgba(12,43,44,.62);padding:18px;border-radius:18px;color:#b8d7d2;margin-top:18px}.foot{color:var(--muted);font-size:13px;margin-top:24px}
+    @media(max-width:1000px){.provider-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+    @media(max-width:860px){header{align-items:flex-start;flex-wrap:wrap}.title{font-size:22px}nav{width:100%;margin:0;overflow:auto}.nav{white-space:nowrap}.hero{align-items:flex-start;flex-direction:column}.hero h1{font-size:40px}}
   </style>
 </head>
 <body>
 <header>
-  <div class="logo">▶</div><div><div class="title">StreamVerse Setup</div><div class="sub">Separate companion · original APK stays unchanged</div></div>
-  <nav><button class="nav active" data-page="addons">Free 15</button><button class="nav" data-page="live">Live TV URLs</button><button class="nav" data-page="community">Community</button><button class="nav" onclick="checkUpdates(event)">Check updates</button></nav>
+  <div class="logo">▶</div><div><div class="title">StreamVerse Setup</div><div class="sub">Mobile-first companion · TV setup made easy</div></div>
+  <nav><button class="nav active" data-page="addons">Add-ons</button><button class="nav" data-page="providers">Providers</button><button class="nav" data-page="live">Live TV</button><button class="nav" data-page="community">Community</button><button class="nav" onclick="checkUpdates(event)">Updates</button></nav>
 </header>
 
 <main id="addons" class="page active">
-  <section class="hero"><div><h1>Curated free add-ons</h1><p>No account login. Direct entries hand off to StreamVerse using its normal install confirmation; setup entries open the provider’s current configuration page.</p></div><span class="badge">✓ No credentials bundled</span></section>
+  <section class="hero"><div><h1>Build your StreamVerse setup.</h1><p>Curated add-ons, provider access, Live TV links, and community tools in one cleaner companion. Direct entries hand off through StreamVerse’s normal confirmation flow.</p></div><span class="badge">✓ No credentials bundled</span></section>
   <div id="addonGrid" class="grid"></div>
   <div class="note">Community add-ons are independent third-party services and may change. Nothing here silently overwrites your StreamVerse setup.</div>
 </main>
 
+<main id="providers" class="page">
+  <section class="hero"><div><h1>Connect your debrid provider.</h1><p>Open your provider on mobile, sign in, then finish authorization inside StreamVerse. Raw provider tokens are never bundled into this companion.</p></div></section>
+  <div class="provider-grid">
+    <article class="provider"><div class="provider-icon">RD</div><h2>Real-Debrid</h2><p>Use the device page when StreamVerse displays an authorization code.</p><button class="button primary" onclick="openWeb('https://real-debrid.com/device')">Open device page</button></article>
+    <article class="provider"><div class="provider-icon">PM</div><h2>Premiumize</h2><p>Open your Premiumize account and complete the access setup for StreamVerse.</p><button class="button primary" onclick="openWeb('https://www.premiumize.me/account')">Open Premiumize</button></article>
+    <article class="provider"><div class="provider-icon">TB</div><h2>TorBox</h2><p>Sign in to TorBox and complete the authorization flow shown by StreamVerse.</p><button class="button primary" onclick="openWeb('https://torbox.app/')">Open TorBox</button></article>
+  </div>
+  <div class="privacy">Provider credentials stay between you, the provider, and StreamVerse. This companion does not publish or store raw debrid tokens.</div>
+</main>
+
 <main id="live" class="page">
-  <section class="hero"><div><h1>Live TV URLs</h1><p>Add a Stremio-compatible Live TV manifest, and keep your permitted M3U/XMLTV URLs together on this device.</p></div></section>
+  <section class="hero"><div><h1>Live TV setup.</h1><p>Add a Stremio-compatible Live TV manifest and keep your permitted M3U/XMLTV URLs together on this device.</p></div></section>
   <section class="panel">
-    <h2>Live TV add-on</h2>
-    <div class="field"><label>Manifest URL <small>— must use HTTPS and end with manifest.json</small></label><input id="manifest" inputmode="url" placeholder="https://provider.example/manifest.json"></div>
-    <div class="field"><label>M3U playlist URL <small>— stored locally; not uploaded</small></label><input id="m3u" inputmode="url" placeholder="https://provider.example/playlist.m3u"></div>
-    <div class="field"><label>XMLTV guide URL <small>— stored locally; not uploaded</small></label><input id="xmltv" inputmode="url" placeholder="https://provider.example/guide.xml"></div>
-    <div class="row"><button class="button primary" onclick="installLive()">Install manifest</button><button class="button" onclick="saveLive()">Save URLs</button><button class="button" onclick="openLiveDirectory()">Browse Live TV add-ons</button></div>
-    <p class="foot">Use only playlists and channels you are authorized to access. Raw M3U/XMLTV URLs require a compatible Live TV add-on; they are not themselves Stremio manifests.</p>
+    <h2>Live TV source</h2>
+    <div class="field"><label>Manifest URL <small>— HTTPS and manifest.json</small></label><input id="manifest" inputmode="url" placeholder="https://provider.example/manifest.json"></div>
+    <div class="field"><label>M3U playlist URL <small>— stored locally</small></label><input id="m3u" inputmode="url" placeholder="https://provider.example/playlist.m3u"></div>
+    <div class="field"><label>XMLTV guide URL <small>— stored locally</small></label><input id="xmltv" inputmode="url" placeholder="https://provider.example/guide.xml"></div>
+    <div class="row"><button class="button primary" onclick="installLive()">Install manifest</button><button class="button secondary" onclick="saveLive()">Save URLs</button><button class="button secondary" onclick="openLiveDirectory()">Browse Live TV</button></div>
+    <p class="foot">Use only playlists and channels you are authorized to access. Raw M3U/XMLTV URLs require a compatible Live TV add-on.</p>
   </section>
 </main>
 
 <main id="community" class="page">
-  <section class="hero"><div><h1>Community directories</h1><p>Open the current Stremio or Nuvio community pages directly from the companion.</p></div></section>
+  <section class="hero"><div><h1>Community resources.</h1><p>Open the current Stremio and Nuvio directories directly from the companion.</p></div></section>
   <div class="grid">
     <article class="card"><span class="direct">DIRECTORY</span><h2>Stremio Community Add-ons</h2><p>Browse the current catalog, categories, manifest status, and configuration pages.</p><button class="button primary" onclick="openWeb('https://stremio-addons.net/addons')">Open Stremio directory</button></article>
-    <article class="card"><span class="direct">NUVIO</span><h2>Nuvio Add-ons</h2><p>Open Nuvio’s official site and add-on resources. Compatible manifests can be pasted in Live TV URLs.</p><button class="button primary" onclick="openWeb('https://nuvio.tv/')">Open Nuvio</button></article>
-    <article class="card"><span class="setup">OPTIONAL</span><h2>18+ directory</h2><p>Kept outside the default 15 and never installed automatically.</p><button class="button" onclick="openWeb('https://stremio-addons.net/addons?categories=18%2B&sort=popular')">Open adult category</button></article>
+    <article class="card"><span class="direct">NUVIO</span><h2>Nuvio Add-ons</h2><p>Open Nuvio’s official site and compatible add-on resources.</p><button class="button primary" onclick="openWeb('https://nuvio.tv/')">Open Nuvio</button></article>
+    <article class="card"><span class="setup">OPTIONAL</span><h2>18+ directory</h2><p>Kept outside the default curated list and never installed automatically.</p><button class="button secondary" onclick="openWeb('https://stremio-addons.net/addons?categories=18%2B&sort=popular')">Open category</button></article>
   </div>
 </main>
 
@@ -66,11 +78,11 @@ const addons=[
  {n:'MediaFusion',d:'Community catalogs and stream provider configuration.',kind:'setup',url:'https://stremio-addons.net/addons/mediafusion-elfhosted'},
  {n:'Torrentio',d:'Community torrent source; configure only sources you may use.',kind:'setup',url:'https://stremio-addons.net/addons/torrentio'},
  {n:'Anime Add-ons',d:'Current popular anime add-ons and manifest health.',kind:'setup',url:'https://stremio-addons.net/addons?categories=anime&sort=popular'},
- {n:'Community Catalog',d:'Install the directory add-on or browse every category.',kind:'setup',url:'https://stremio-addons.net/addons/stremio-addons.net'}
+ {n:'Community Catalog',d:'Browse every category in the community directory.',kind:'setup',url:'https://stremio-addons.net/addons/stremio-addons.net'}
 ];
 const grid=document.getElementById('addonGrid');
-addons.forEach((a,i)=>{const el=document.createElement('article');el.className='card';el.innerHTML=`<span class="${a.kind==='direct'?'direct':'setup'}">${a.kind==='direct'?'DIRECT INSTALL':'OPEN SETUP'}</span><span class="num">${String(i+1).padStart(2,'0')} / 15</span><h2>${a.n}</h2><p>${a.d}</p><button class="button ${a.kind==='direct'?'primary':''}">${a.kind==='direct'?'Install in StreamVerse':'Open setup page'}</button>`;el.querySelector('button').onclick=()=>a.kind==='direct'?install(a.url):openWeb(a.url);grid.appendChild(el)});
-document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav,.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');window.scrollTo(0,0)});
+addons.forEach((a,i)=>{const el=document.createElement('article');el.className='card';el.innerHTML=`<span class="${a.kind==='direct'?'direct':'setup'}">${a.kind==='direct'?'DIRECT INSTALL':'OPEN SETUP'}</span><span class="num">${String(i+1).padStart(2,'0')} / 15</span><h2>${a.n}</h2><p>${a.d}</p><button class="button ${a.kind==='direct'?'primary':'secondary'}">${a.kind==='direct'?'Install in StreamVerse':'Open setup page'}</button>`;el.querySelector('button').onclick=()=>a.kind==='direct'?install(a.url):openWeb(a.url);grid.appendChild(el)});
+document.querySelectorAll('.nav[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav,.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');window.scrollTo(0,0)});
 function hasBridge(){return typeof StreamVerseSetup!=='undefined'}
 function install(url){if(hasBridge())StreamVerseSetup.installManifest(url);else location.href=url.replace('https://','stremio://')}
 function openWeb(url){if(hasBridge())StreamVerseSetup.openExternal(url);else window.open(url,'_blank')}
