@@ -27,7 +27,9 @@ public final class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
-                if ("https".equalsIgnoreCase(uri.getScheme())) return false;
+                if ("https".equalsIgnoreCase(uri.getScheme())) {
+                    return false;
+                }
                 openUri(uri);
                 return true;
             }
@@ -45,6 +47,16 @@ public final class MainActivity extends Activity {
         }
     }
 
+    private void openInsideApp(String value) {
+        String clean = value == null ? "" : value.trim();
+        Uri uri = Uri.parse(clean);
+        if (!"https".equalsIgnoreCase(uri.getScheme())) {
+            Toast.makeText(this, "Only secure HTTPS links are allowed.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        webView.loadUrl(clean);
+    }
+
     private void openManifest(String value) {
         String clean = value == null ? "" : value.trim();
         if (!clean.startsWith("https://") || !clean.endsWith("manifest.json")) {
@@ -58,16 +70,9 @@ public final class MainActivity extends Activity {
 
     public final class SetupBridge {
         @JavascriptInterface public void installManifest(String url) { runOnUiThread(() -> openManifest(url)); }
-        @JavascriptInterface public void openExternal(String url) {
-            runOnUiThread(() -> {
-                Uri uri = Uri.parse(url == null ? "" : url.trim());
-                if (!"https".equalsIgnoreCase(uri.getScheme())) {
-                    Toast.makeText(MainActivity.this, "Only secure HTTPS links are allowed.", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                openUri(uri);
-            });
-        }
+        @JavascriptInterface public void openExternal(String url) { runOnUiThread(() -> openInsideApp(url)); }
+        @JavascriptInterface public void openInsideApp(String url) { runOnUiThread(() -> openInsideApp(url)); }
+        @JavascriptInterface public void goHome() { runOnUiThread(() -> webView.loadUrl("file:///android_asset/index.html")); }
         @JavascriptInterface public void checkForUpdates() {
             runOnUiThread(() -> new UpdateChecker(MainActivity.this).check(true));
         }
