@@ -93,10 +93,18 @@ public final class MainActivity extends Activity {
         webView.loadUrl(clean);
     }
 
+    private boolean isSecureManifestUrl(String value) {
+        if (value == null || value.trim().isEmpty()) return false;
+        Uri uri = Uri.parse(value.trim());
+        if (!"https".equalsIgnoreCase(uri.getScheme())) return false;
+        String path = uri.getPath();
+        return path != null && path.endsWith("/manifest.json");
+    }
+
     private void openManifest(String value) {
         String clean = value == null ? "" : value.trim();
-        if (!clean.startsWith("https://") || !clean.endsWith("manifest.json")) {
-            Toast.makeText(this, "Enter a secure add-on manifest URL ending in manifest.json.", Toast.LENGTH_LONG).show();
+        if (!isSecureManifestUrl(clean)) {
+            Toast.makeText(this, "Enter a secure HTTPS add-on manifest URL ending in /manifest.json. Query parameters are supported.", Toast.LENGTH_LONG).show();
             return;
         }
         Uri web = Uri.parse(clean);
