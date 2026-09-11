@@ -1,17 +1,60 @@
 # StreamVerse Setup
 
-A separate Fire TV / Google TV companion for StreamVerse. It keeps a curated list of 15 free community add-ons, opens official configuration pages, installs secure `manifest.json` links through the standard `stremio://` handoff, and stores Live TV M3U/XMLTV URLs locally.
+StreamVerse Setup is the public companion app for configuring StreamVerse on Fire TV, Android TV, Google TV, and supported browser workflows. It is separate from the main StreamVerse APK and uses its own Android package:
 
-This project does **not** replace or modify the original StreamVerse APK. Its package is `com.akahwaj.streamversesetup`.
+```text
+com.akahwaj.streamversesetup
+```
 
-## Safety model
+The companion exists to make add-on, manifest, QR, and Live TV setup easier without embedding personal configuration inside the public StreamVerse build.
 
-- No account login, password, debrid token, or private manifest is bundled.
-- A separate Android app cannot silently write another app's private add-on database.
-- Add-on installation therefore uses StreamVerse/Nuvio's normal confirmation flow.
-- Community services can change or disappear; links are clearly marked as third-party.
-- Live TV accepts user-supplied HTTPS URLs. Users are responsible for having permission to use their playlist.
-- Automatic updates check the public `Akahwaj/StreamVerse-Setup` GitHub release channel and always require Android's install confirmation.
+## Current role
+
+StreamVerse Setup provides:
+
+- a curated community add-on browser
+- links to official/configuration pages for configurable providers
+- custom manifest handoff into StreamVerse using supported deep-link flows
+- QR-assisted setup for phone-to-TV configuration
+- browser clipboard/copy support
+- local Live TV M3U/XMLTV URL storage
+- a lightweight installable web companion
+- update checks for the Setup companion itself
+
+It does not replace the main StreamVerse Android/Fire TV app and cannot silently write directly into another application's private Android storage.
+
+## QR and provider setup
+
+QR setup must be treated as a complete configuration flow, not just a barcode that points to a generic URL.
+
+For configuration-required add-ons or services, the setup flow should:
+
+1. open the correct provider configuration page
+2. let the user finish provider-specific setup or authentication
+3. obtain the configured manifest, deep link, or other supported result
+4. hand that result back into StreamVerse
+5. allow StreamVerse to validate and persist the configuration
+
+This distinction is especially important for tracking providers and configurable add-on aggregators. A QR scan is not considered complete if the phone side succeeds but StreamVerse never receives or stores the resulting configuration.
+
+## Privacy model
+
+- no required account sign-in
+- no personal manifest is bundled in this public repository
+- no debrid token, provider credential, tracking credential, or private bootstrap data is committed
+- Live TV URLs remain user-supplied configuration
+- browser-side values should remain local unless the user explicitly sends them through a supported setup flow
+- Android still requires normal user confirmation for app installation/update actions
+
+## Third-party streaming and piracy disclaimer
+
+StreamVerse Setup does not host, upload, index, sell, or provide third-party streams or copyrighted media. It only helps users configure links, manifests, playlists, add-ons, and services they choose to use with StreamVerse.
+
+StreamVerse, StreamVerse Setup, and their maintainers are not responsible for piracy, unauthorized streaming, copyright infringement, or other misuse performed through third-party add-ons, manifests, playlists, providers, links, or user-supplied configuration.
+
+Third-party providers are independent from StreamVerse and StreamVerse Setup. Their availability, behavior, content, APIs, authentication methods, and terms can change without notice. Listing or linking a provider, add-on, manifest, playlist format, or external service does not imply ownership, endorsement, affiliation, or authorization by StreamVerse.
+
+Users are responsible for the services and sources they configure, for complying with applicable law and provider terms, and for ensuring they have permission to access or play the content involved.
 
 ## Build
 
@@ -19,4 +62,4 @@ This project does **not** replace or modify the original StreamVerse APK. Its pa
 gradle :app:assembleRelease
 ```
 
-GitHub Actions builds and validates the APK. A production update channel should use a persistent signing key stored as repository secrets.
+GitHub Actions builds and validates the Setup APK. Production distribution should use a persistent signing key stored securely as repository secrets so Android can recognize future updates as coming from the same application identity.
