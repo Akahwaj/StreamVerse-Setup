@@ -16,7 +16,7 @@ const addons = [
   { name: 'Community Catalog', description: 'Browse every category in the community directory.', kind: 'setup', url: 'https://stremio-addons.net/addons/stremio-addons.net' }
 ];
 
-const demoManifest = 'https://aiometadata.elfhosted.com/stremio/7e1b6e37-b28d-4ecb-ab15-206d7f44d69f/manifest.json';
+const demoManifest = 'https://v3-cinemeta.strem.io/manifest.json';
 const state = { filter: 'all', query: '', qrUrl: '', deferredPrompt: null };
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -105,7 +105,7 @@ function showRoute() {
 
 $('#manifest-form').addEventListener('submit', event => { event.preventDefault(); openManifest($('#custom-manifest').value.trim(), $('#manifest-message')); });
 $('#open-demo-manifest').addEventListener('click', () => openManifest(demoManifest));
-$('#qr-demo-manifest').addEventListener('click', () => showQr(demoManifest, 'StreamVerse AIOMetadata'));
+$('#qr-demo-manifest').addEventListener('click', () => showQr(demoManifest, 'StreamVerse public demo'));
 $('#addon-search').addEventListener('input', event => { state.query = event.target.value.trim().toLowerCase(); renderAddons(); });
 $$('.filter').forEach(button => button.addEventListener('click', () => {
   state.filter = button.dataset.filter;
