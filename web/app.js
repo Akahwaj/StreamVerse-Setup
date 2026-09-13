@@ -140,5 +140,55 @@ $('.install-app').addEventListener('click', async () => { if (!state.deferredPro
 window.addEventListener('hashchange', showRoute);
 window.addEventListener('appinstalled', () => notify('StreamVerse Setup installed'));
 
+function pairingContext() {
+  const match = location.pathname.match(/\/pair\/([A-Z0-9]{4,12})\/?$/i);
+  const token = new URLSearchParams(location.hash.slice(1)).get('token');
+  return match && token ? { code: match[1].toUpperCase(), token } : null;
+}
+
+function pairingConfig() {
+  let liveTv = {};
+  try { liveTv = JSON.parse(localStorage.getItem('streamverse-live-tv') || '{}'); } catch {}
+  return {
+    addons: addons.filter(addon => addon.kind === 'direct').map(addon => ({ name: addon.name, manifest: addon.url })),
+    liveTv,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function submitPairingConfig() {
+  const context = pairingContext();
+  if (!context) return;
+  const button = $('#streamverse-pair-submit');
+  if (button) button.disabled = true;
+  try {
+    const response = await fetch(`/v1/pairing/sessions/${encodeURIComponent(context.code)}/config`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${context.token}` },
+      body: JSON.stringify(pairingConfig()),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || 'Could not send setup to the TV.');
+    notify('Setup sent to your StreamVerse TV');
+    history.replaceState(null, '', `${location.pathname}${location.search}`);
+    if (button) { button.textContent = 'Sent to TV'; button.disabled = true; }
+  } catch (error) {
+    notify(error.message || 'Could not send setup to the TV');
+    if (button) button.disabled = false;
+  }
+}
+
+function mountPairingAction() {
+  if (!pairingContext() || $('#streamverse-pair-submit')) return;
+  const button = document.createElement('button');
+  button.id = 'streamverse-pair-submit';
+  button.type = 'button';
+  button.className = 'primary';
+  button.textContent = 'Send setup to TV';
+  button.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:1000;box-shadow:0 12px 30px rgba(0,0,0,.28)';
+  button.addEventListener('click', submitPairingConfig);
+  document.body.appendChild(button);
+}
+
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
-loadLive(); renderAddons(); showRoute();
+loadLive(); renderAddons(); showRoute(); mountPairingAction();
